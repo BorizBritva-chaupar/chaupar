@@ -88,10 +88,20 @@ header p{margin:0;color:var(--muted);max-width:56ch;font-size:14px}
 
 .chat{display:flex;flex-direction:column;gap:6px;width:100%;max-width:520px;margin:6px auto 0;padding:8px 10px;border-radius:14px;
   background:rgba(8,10,28,.35);border:1px solid rgba(227,167,47,.28)}
+.chat{position:relative}
+.chat-body{display:flex;flex-direction:column;gap:6px}
+.chat-tog{appearance:none;position:absolute;right:8px;top:-11px;z-index:2;border:1px solid rgba(227,167,47,.5);background:#1b2353;color:#f3c55c;border-radius:10px;font:500 11px/1 var(--body);padding:4px 8px;cursor:pointer}
+.chat-tog .ct-min{display:none}.chat-tog b{margin-left:5px;background:#e2321f;color:#fff;border-radius:8px;padding:1px 5px;font-size:10px}
+.chat-tog b:empty{display:none}
+.chat.min{padding:0;border:0;background:none;align-items:center}
+.chat.min .chat-body{display:none}
+.chat.min .chat-tog{position:static;font-size:13px;padding:7px 14px;border-radius:16px}
+.chat.min .ct-open{display:none}.chat.min .ct-min{display:inline}
+.chat-tog:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .chat-log{list-style:none;margin:0;padding:0;max-height:66px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;font-size:14px;line-height:1.3;color:#efe4cc;scrollbar-width:thin}
 .chat-log li{overflow-wrap:anywhere}.chat-log b{font-weight:600;margin-right:4px}
 .chat-log .sys{color:var(--muted);font-style:italic}
-.chat-log:empty::before{content:"Сообщения увидят все в комнате. Брось снежок — выбери предмет и нажми на имя.";color:var(--muted);font-size:13px}
+
 .chat-row{display:flex;align-items:center;gap:6px}
 .throws{display:flex;gap:2px;flex:none}
 .throw{appearance:none;border:0;background:none;padding:2px;width:36px;height:36px;border-radius:50%;cursor:pointer;transition:transform .15s,background .2s}
@@ -132,10 +142,12 @@ header p{margin:0;color:var(--muted);max-width:56ch;font-size:14px}
 @keyframes fade{0%{opacity:0}12%{opacity:1}70%{opacity:1}100%{opacity:0}}
 body.shaking .wrap{animation:jolt .5s ease-out}
 @media (prefers-reduced-motion:reduce){.splash .flake,.missile{display:none}}
+.standings{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;font-family:"Kurale","Forum",serif;font-size:17px}
+.standings .last{color:#ff9a88}
 .corner{position:absolute;transform-origin:0 0;transform:rotate(var(--unrot,0deg)) translate(-50%,-50%);max-width:none;
 display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;white-space:nowrap;pointer-events:none;z-index:4;
   font-family:"Kurale","Forum",Georgia,serif;color:var(--label,#f6e7c3);text-shadow:0 1px 2px var(--label-sh,#000),0 0 6px var(--label-sh,#000);transition:color .25s}
-.corner .nm{font-size:clamp(14px,2.3vw,21px);line-height:1.15;display:flex;align-items:center;gap:5px;text-shadow:none}
+.corner .nm{font-size:clamp(16px,2.7vw,24px);line-height:1.15;display:flex;align-items:center;gap:5px;text-shadow:none}
 .corner .nm .dot{width:.42em;height:.42em;margin:0;box-shadow:0 0 0 1.5px var(--st1,#f3c55c),0 1px 2px rgba(0,0,0,.6)}
 /* the name looks embroidered: satin-stitch stripes in the cloth's own thread, slightly raised */
 .corner[data-side="l"]{transform:rotate(var(--unrot,0deg)) translate(-100%,-50%)}
@@ -144,7 +156,7 @@ display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
 .corner[data-side="tl"]{transform:rotate(var(--unrot,0deg)) translate(0,-100%)}
 .corner[data-side="br"]{transform:rotate(var(--unrot,0deg)) translate(-100%,0)}
 [hidden]{display:none!important}
-.corner .nmt{font-family:"Lobster","Kurale",cursive;font-weight:400;letter-spacing:.01em;padding:0 3px 2px;
+.corner .nmt{font-family:"Kurale","Forum",Georgia,serif;font-weight:400;font-style:normal;letter-spacing:.02em;padding:0 3px 2px;
   background:repeating-linear-gradient(62deg,var(--n0,#d99a26) 0 1.2px,var(--n1,#f3c55c) 1.2px 2.4px);-webkit-background-clip:text;background-clip:text;color:transparent;
   opacity:.95;filter:drop-shadow(0 1px 0 var(--ol,rgba(0,0,0,.6))) drop-shadow(0 0 1px var(--ol,rgba(0,0,0,.45)))}
 .corner .meta{font-size:clamp(8.5px,1.3vw,11px);line-height:1.15;color:var(--label,#d8c7a4);opacity:.85}
@@ -403,7 +415,8 @@ html,body{overflow-x:hidden}
   .dock .turnbar{width:100%;display:flex;justify-content:center}
   .dock .status{width:100%;text-align:center!important;flex:none!important}
   .chat{margin-top:2px;padding:6px 8px}.chat-log{max-height:44px;font-size:13px}.throw{width:32px;height:32px}
-  .cup{height:clamp(80px,14vh,150px)!important;width:auto!important;aspect-ratio:64/72}
+  html,body{overscroll-behavior:none}
+  .cup{height:clamp(64px,11vh,128px)!important;width:auto!important;aspect-ratio:64/72}
   .dock .status{font-size:clamp(15px,2.2vh,19px)}
   body{padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(18px, env(safe-area-inset-right, 0px));padding-top:16px}
   header{gap:8px}header p{display:none}h1{font-size:30px}
@@ -462,12 +475,15 @@ html,body{overflow-x:hidden}
       </div>
       </div>
       <section class="chat" id="chat" aria-label="Чат комнаты">
+        <button class="chat-tog" id="chatTog" type="button" aria-expanded="true" aria-controls="chatBody"><span class="ct-open">Свернуть чат</span><span class="ct-min">Чат<b id="chatNew"></b></span></button>
+        <div class="chat-body" id="chatBody">
         <ol class="chat-log" id="chatLog" aria-live="polite"></ol>
         <form class="chat-row" id="chatForm" autocomplete="off">
           <div class="throws" role="group" aria-label="Бросить в игрока"><button class="throw" type="button" data-kind="snow" aria-label="Снежок" title="Снежок"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="i-snow" cx="38%" cy="32%"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#e3efff"/><stop offset="1" stop-color="#a9c3e8"/></radialGradient></defs><circle cx="20" cy="21" r="13" fill="url(#i-snow)"/><circle cx="15" cy="17" r="2" fill="#fff"/><circle cx="24" cy="25" r="1.4" fill="#c6d8f2"/></svg></button><button class="throw" type="button" data-kind="tomato" aria-label="Помидор" title="Помидор"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="i-tom" cx="38%" cy="35%"><stop offset="0" stop-color="#ff8a6a"/><stop offset=".6" stop-color="#e2321f"/><stop offset="1" stop-color="#9c1309"/></radialGradient></defs><ellipse cx="20" cy="23" rx="14" ry="12" fill="url(#i-tom)"/><path d="M20 11 l-5 2 4 1 -3 4 4-2 4 2-3-4 4-1z" fill="#3c9a3a"/><ellipse cx="14.5" cy="19" rx="3" ry="2" fill="#fff" opacity=".45"/></svg></button><button class="throw" type="button" data-kind="egg" aria-label="Яйцо" title="Яйцо"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="i-egg" cx="38%" cy="30%"><stop offset="0" stop-color="#fffdf6"/><stop offset=".7" stop-color="#f1e3c6"/><stop offset="1" stop-color="#c9b48a"/></radialGradient></defs><path d="M20 6 C29 6 33 18 33 24 C33 31 27 35 20 35 C13 35 7 31 7 24 C7 18 11 6 20 6Z" fill="url(#i-egg)"/><ellipse cx="15" cy="16" rx="3" ry="4" fill="#fff" opacity=".7"/></svg></button><button class="throw" type="button" data-kind="grenade" aria-label="Граната" title="Граната"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="i-gr" cx="38%" cy="35%"><stop offset="0" stop-color="#7c8f4a"/><stop offset=".7" stop-color="#4b5a26"/><stop offset="1" stop-color="#2c3514"/></radialGradient></defs><rect x="16" y="6" width="8" height="6" rx="1.5" fill="#9a9a9a"/><circle cx="28" cy="9" r="4" fill="none" stroke="#c9c9c9" stroke-width="2"/><ellipse cx="20" cy="24" rx="11" ry="12" fill="url(#i-gr)"/><path d="M12 20 H28 M12 26 H28 M17 13 V35 M23 13 V35" stroke="#2a3312" stroke-width="1.2" opacity=".6"/></svg></button></div>
           <input id="chatInput" type="text" maxlength="200" placeholder="Написать всем…" aria-label="Сообщение в чат" enterkeyhint="send">
           <button class="chat-send" type="submit" aria-label="Отправить"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 21 12 3 4l2 7 9 1-9 1z" fill="currentColor"/></svg></button>
         </form>
+        </div>
       </section>
       <div id="choice" class="row" hidden></div>
       <div id="overBox" hidden class="over"></div>
@@ -597,7 +613,7 @@ for(let p=0;p<4;p++)for(let r=A0;r<=E;r++)LANE.set(K(rotN([r,M],p)),p);
 
 let S,gen=0,rollingNow=false;
 const fresh=(seats,owners,names)=>({pieces:[0,1,2,3].map(()=>Array(NP).fill(-1)),box:[0,1,2,3].map(()=>Array(NP).fill('')),seats:seats||['human','bot','bot','bot'],
-  owners:owners||[null,null,null,null],names:names||null,away:[null,null,null,null],turn:0,phase:'roll',dice:[],sel:0,bonus:0,log:[],winner:null,last:null});
+  owners:owners||[null,null,null,null],names:names||null,away:[null,null,null,null],turn:0,phase:'roll',dice:[],sel:0,bonus:0,log:[],winner:null,last:null,places:[],loser:null,overFx:null});
 const $=id=>document.getElementById(id);
 const board=$('board');
 
@@ -1024,13 +1040,24 @@ function applyMove(m){
   if(m.from===-1)addLog(`${tag(m.p)} выводит камень (${m.v})`);
   else if(m.to>=HS&&m.from<HS){Snd.play('home');addLog(`${tag(m.p)}: камень зашёл в свой ряд`);}
   if(vic.length){addLog(`${tag(m.p)} рубит ${vic.length>1?vic.length+' камня':'камень'}: ${tag(vic[0][0])} — домой, выходить заново с единицы`);}
-  if(allHome(m.p)){S.winner=m.p;S.phase='over';Snd.play('win',300);nextFact();addLog(`${tag(m.p)} побеждает!`);render();Net.push();return;}
+  if(allHome(m.p)&&!(S.places||[]).includes(m.p)){
+    S.places=(S.places||[]).concat(m.p);const place=S.places.length;
+    if(place===1){S.winner=m.p;Snd.play('win',300);}else Snd.play('home');
+    addLog(`${tag(m.p)} — ${place}-е место!`);
+    const left=ORDER.filter(q=>inPlay(q));
+    if(left.length<=1){ // only one player is still walking: that is the last place
+      S.loser=left[0]??null;S.phase='over';S.overFx=Math.random().toString(36).slice(2,8);nextFact();
+      if(S.loser!=null)addLog(`${tag(S.loser)} — последнее место. Ловите помидоры!`);
+      render();Net.push();return;}
+    S.dice.forEach(d=>d.used=true);S.bonus=0;render();Net.push();if(authority())later(endTurn,900);return;
+  }
   const lm=legalMoves();
   if(!lm.length){render();Net.push();if(authority())later(endTurn,S.dice.some(d=>!d.used)?900:450);return;}
   if(S.dice[S.sel]?.used||!lm.some(x=>x.i===S.sel))S.sel=lm[0].i;
   render();Net.push();if(isBot()&&authority())later(botMove,600);
 }
-function nextActive(p){const j=ORDER.indexOf(p);for(let i=1;i<=4;i++){const q=ORDER[(j+i)%4];if(active(q))return q;}return p;}
+const inPlay=p=>active(p)&&!(S.places||[]).includes(p);   // still walking (not finished yet)
+function nextActive(p){const j=ORDER.indexOf(p);for(let i=1;i<=4;i++){const q=ORDER[(j+i)%4];if(inPlay(q))return q;}for(let i=1;i<=4;i++){const q=ORDER[(j+i)%4];if(active(q))return q;}return p;}
 // Facts about the game, shown one at a time while you play
 const FACTS=[
   'По преданию, именно в чаупар Пандавы проиграли своё царство — об этом рассказывает «Махабхарата».',
@@ -1134,6 +1161,7 @@ function hardScore(m){
 }
 function botMove(){
   if(S.phase!=='move'||!isBot()||!authority()||animating)return;
+  if(!inPlay(S.turn)){endTurn();return;}
   const lm=legalMoves();if(!lm.length){endTurn();return;}
   let best=lm[0];
   if(level==='easy'&&Math.random()<.6)best=lm[Math.random()*lm.length|0];
@@ -1440,7 +1468,9 @@ function render(){
   ov.hidden=S.phase!=='over';
   if(S.phase==='over'){
     st.innerHTML=`Победа: ${tag(S.winner)}`;
-    ov.innerHTML=`Все шесть камней встали в ряд. <button class="btn" id="again" type="button">Сыграть ещё</button>`;
+    const pl=(S.places||[]).map((p,i)=>`<li>${i+1}. ${tag(p)}</li>`).join('')+(S.loser!=null?`<li class="last">${(S.places||[]).length+1}. ${tag(S.loser)} 🍅</li>`:'');
+    ov.innerHTML=`<ol class="standings">${pl}</ol><button class="btn" id="again" type="button">Сыграть ещё</button>`;
+    if(S.overFx&&Chat.lastOver!==S.overFx){Chat.lastOver=S.overFx;setTimeout(()=>Chat.volley(),900);}
     $('again').hidden=!authority();$('again').onclick=()=>newGame(S.seats.map(x=>x==='open'?'bot':x));rb.disabled=true;
   }else if(S.phase==='lobby'){
     st.innerHTML=NET.host?'Соберите игроков и начните игру':'Ждём, когда ведущий начнёт игру…';rb.disabled=true;
@@ -1666,7 +1696,12 @@ $('copyLink').addEventListener('click',async()=>{const i=$('roomLink');
 const FX_NAMES={snow:'снежок',tomato:'помидор',egg:'яйцо',grenade:'гранату'};
 const Chat={
   armed:null,last:0,
+  unread:0,
+  fold(min){$('chat').classList.toggle('min',min);$('chatTog').setAttribute('aria-expanded',!min);if(!min){this.unread=0;$('chatNew').textContent='';}
+    try{localStorage.setItem('chaupar-chat-min',min?'1':'0');}catch(e){}},
   init(){
+    $('chatTog').addEventListener('click',()=>this.fold(!$('chat').classList.contains('min')));
+    try{if(localStorage.getItem('chaupar-chat-min')==='1')this.fold(true);}catch(e){}
     document.querySelectorAll('.throw').forEach(b=>b.addEventListener('click',()=>this.arm(b.dataset.kind===this.armed?null:b.dataset.kind)));
     corners.forEach((d,p)=>d.addEventListener('click',e=>{if(!this.armed)return;e.stopPropagation();this.throwAt(p);}));
     $('chatForm').addEventListener('submit',e=>{e.preventDefault();const i=$('chatInput'),t=i.value.trim();if(!t)return;
@@ -1679,7 +1714,6 @@ const Chat={
   arm(kind){
     this.armed=kind;document.querySelectorAll('.throw').forEach(b=>b.classList.toggle('armed',b.dataset.kind===kind));
     board.classList.toggle('aiming',!!kind);
-    if(kind)this.sys('Нажмите на имя игрока, чтобы бросить '+FX_NAMES[kind]);
   },
   mySeat(){for(const p of ORDER)if(S.seats[p]==='human'&&(!NET.on||S.owners[p]===NET.id))return p;return null;},
   throwAt(p){
@@ -1694,6 +1728,7 @@ const Chat={
   onChat(m,quiet){
     const p=this.seatOf(m.id),col=p==null?'#f3c55c':['#fffdf6','#8fb0ff','#ff8a7a','#c9c2b4'][p];
     this.add(`<li><b style="color:${col}">${esc(m.name||'Игрок')}:</b>${esc(m.text)}</li>`);
+    if(!quiet&&$('chat').classList.contains('min')){this.unread++;$('chatNew').textContent=this.unread;}
     if(!quiet&&p!=null)this.bubble(p,m.text);
   },
   onFx(m){this.play({kind:m.kind,to:m.to,fromSeat:this.seatOf(m.id),name:m.name});},
@@ -1707,7 +1742,6 @@ const Chat={
     let sx,sy;if(fromSeat!=null){const r=corners[fromSeat].querySelector('.nmt').getBoundingClientRect();sx=r.left+r.width/2;sy=r.top+r.height/2;}
     else{sx=innerWidth/2;sy=innerHeight-40;}
     const tx=tgt.left+tgt.width/2,ty=tgt.top+tgt.height/2;
-    this.sys(`${name||'Кто-то'} бросает ${FX_NAMES[kind]} в ${pname(to)}`);
     Snd.play('toss');
     const m=document.createElement('div');m.className='missile';m.innerHTML=document.querySelector(`.throw[data-kind="${kind}"]`).innerHTML.replace(/id="i-/g,'id="m-').replace(/url\(#i-/g,'url(#m-');document.body.appendChild(m);
     const dist=Math.hypot(tx-sx,ty-sy),lift=Math.min(220,dist*.45),dur=650+dist*.6,spin=kind==='grenade'?720:360;
@@ -1715,6 +1749,12 @@ const Chat={
     const a=m.animate?m.animate(kf,{duration:dur,easing:'linear',fill:'forwards'}):null;
     const land=()=>{m.remove();this.hit(kind,tx,ty);if(this.isMe(to))this.splash(kind);};
     if(a)a.onfinish=land;else setTimeout(land,dur);
+  },
+  volley(){
+    const L=S.loser;if(L==null||!active(L))return;
+    const from=ORDER.filter(p=>active(p)&&p!==L);
+    from.forEach((p,i)=>setTimeout(()=>this.play({kind:'tomato',to:L,fromSeat:p,name:pname(p)}),i*450));
+    if(from.length<3)setTimeout(()=>this.play({kind:'tomato',to:L,fromSeat:null,name:''}),from.length*450+200);
   },
   isMe(p){return S.seats[p]==='human'&&(!NET.on||S.owners[p]===NET.id)&&(NET.on||p===this.mySeat());},
   hit(kind,x,y){
