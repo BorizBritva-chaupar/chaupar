@@ -1,0 +1,16 @@
+# Обновляет сайт на Render после каждого изменения в ветке main.
+name: Deploy to Render
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "Секрет RENDER_DEPLOY_HOOK ещё не добавлен — пропускаю"; exit 0; fi
+          curl -fsS -X POST "$HOOK" > /dev/null && echo "Render: выкладка запущена"
