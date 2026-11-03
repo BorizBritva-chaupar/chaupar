@@ -345,7 +345,8 @@ html,body{overflow-x:hidden}
 /* phones: the board as big as the screen allows; the whole screen becomes the cloth with fringe along its edges */
 .edge{display:none}
 @media (max-width:640px){
-  html,body{background:radial-gradient(120% 90% at 50% 35%,var(--vel0,#26306a),var(--vel1,#1b2353) 60%,var(--vel2,#121839))!important}
+  html{min-height:100%;background:radial-gradient(130% 70% at 50% 30%,var(--vel0,#26306a),var(--vel1,#1b2353) 70%,var(--vel1,#1b2353))!important;background-color:var(--vel1,#1b2353)!important}
+  body{background:transparent!important;min-height:100vh;min-height:100dvh}
   body{padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(18px, env(safe-area-inset-right, 0px));padding-top:16px}
   header{gap:8px}header p{display:none}h1{font-size:30px}
   .cloth{width:112%;margin:0 -6%;padding:7.725%;filter:none} /* padding = 6.897% of the cloth's own width, so the drawing and the cells line up */
@@ -360,7 +361,7 @@ html,body{overflow-x:hidden}
     linear-gradient(90deg,var(--br1,#eab448),var(--br0,#b9811f)) left/3px 100% no-repeat,var(--tas-v) 2px 0/15px 11px repeat-y}
   .edge.l{left:0;transform:scaleX(-1)}
   .edge.r{right:0}
-  .dock{bottom:17px;background:linear-gradient(180deg,transparent,rgba(10,12,30,.82) 30%);border-top:0}
+  .dock{bottom:17px;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-top:0;box-shadow:none}
   details.sec{background:rgba(10,12,30,.55)}
 }
 </style>
