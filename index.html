@@ -347,6 +347,17 @@ html,body{overflow-x:hidden}
 @media (max-width:640px){
   html{min-height:100%;background:radial-gradient(130% 70% at 50% 30%,var(--vel0,#26306a),var(--vel1,#1b2353) 70%,var(--vel1,#1b2353))!important;background-color:var(--vel1,#1b2353)!important}
   body{background:transparent!important;min-height:100vh;min-height:100dvh}
+  /* one screen: title, board, and the cup centred in whatever space is left below the board */
+  body{padding-bottom:20px}
+  .wrap{min-height:calc(100vh - 36px);min-height:calc(100dvh - 36px);display:flex;flex-direction:column;gap:6px}
+  .main{flex:1;display:flex!important;flex-direction:column;align-items:stretch!important;gap:0}
+  .panel{width:100%}
+  .panel{flex:1;display:flex;flex-direction:column;justify-content:center;gap:0}
+  .dock{position:static!important;flex:1;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center;text-align:center;padding:6px 0 10px!important;margin:0!important;border:0!important}
+  .dock .turnbar{width:100%;display:flex;justify-content:center}
+  .dock .status{width:100%;text-align:center!important;flex:none!important}
+  .cup{height:clamp(96px,18vh,170px)!important;width:auto!important;aspect-ratio:64/72}
+  .dock .status{font-size:clamp(15px,2.2vh,19px)}
   body{padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(18px, env(safe-area-inset-right, 0px));padding-top:16px}
   header{gap:8px}header p{display:none}h1{font-size:30px}
   .cloth{width:112%;margin:0 -6%;padding:7.725%;filter:none} /* padding = 6.897% of the cloth's own width, so the drawing and the cells line up */
