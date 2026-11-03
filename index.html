@@ -33,9 +33,32 @@ body{font-family:var(--body);font-size:15px;line-height:1.45;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 32px;
   background:radial-gradient(120% 80% at 50% 0%,var(--table-2),var(--table) 70%);min-height:100%}
 .wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
-header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,6vw,52px);margin:0;color:var(--gold);line-height:1;letter-spacing:.02em}
-header p{margin:0;color:var(--muted);max-width:56ch}
+header{display:grid;grid-template-columns:56px 1fr 56px;align-items:center;gap:8px}
+header .ttl{grid-column:2;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-width:0}
+/* the name of the game, stitched in gold satin */
+h1{font-family:"Lobster","Kurale",cursive;font-weight:400;font-size:clamp(40px,7vw,66px);margin:0;line-height:1.1;letter-spacing:.01em;padding:0 6px 4px;
+  background:repeating-linear-gradient(62deg,#d99a26 0 1.6px,#f6cf6a 1.6px 3.2px);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.55)) drop-shadow(0 0 1px rgba(0,0,0,.4));display:flex;align-items:center;gap:14px}
+h1::before,h1::after{content:"";width:clamp(26px,6vw,70px);height:0;border-top:2px dashed var(--teal,#3fc0c4);opacity:.75}
+header p{margin:0;color:var(--muted);max-width:56ch;font-size:14px}
+@media (max-width:640px){header{grid-template-columns:48px 1fr 48px}.menubtn{width:46px;height:46px}h1{font-size:40px}}
+.menubtn{grid-column:3;justify-self:end;appearance:none;border:0;background:none;padding:0;cursor:pointer;width:54px;height:54px;border-radius:50%;transition:transform .2s;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+.menubtn:hover{transform:scale(1.06) rotate(8deg)}
+.menubtn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.menubtn svg{width:100%;height:100%;display:block}
+/* the menu: a velvet panel that slides in from the side */
+.scrim{position:fixed;inset:0;background:rgba(6,6,14,.55);backdrop-filter:blur(2px);z-index:60;opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:61;width:min(440px,94vw);overflow:auto;visibility:hidden;transform:translateX(104%);transition:transform .35s cubic-bezier(.3,.7,.2,1),visibility 0s .35s;
+  padding:calc(14px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 18px;
+  background:radial-gradient(120% 70% at 30% 0%,#27306a,#161c45 60%,#0f1433);border-left:3px solid transparent;border-image:repeating-linear-gradient(55deg,#d99a26 0 4px,#f6cf6a 4px 8px) 3;
+  box-shadow:-12px 0 30px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:12px}
+.drawer.on{visibility:visible;transform:none;transition:transform .35s cubic-bezier(.3,.7,.2,1)}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:4px 0 6px;border-bottom:2px dashed rgba(63,192,196,.5)}
+.drawer-head b{font-family:"Lobster","Kurale",cursive;font-weight:400;font-size:30px;color:#f3c55c}
+.xbtn{appearance:none;border:1px solid rgba(227,167,47,.5);background:transparent;color:#f3c55c;width:40px;height:40px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer}
+.xbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.drawer details.sec{background:rgba(255,255,255,.03)}
 .main{display:grid;grid-template-columns:minmax(0,800px) minmax(260px,1fr);gap:22px;align-items:start}
 @media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
 @media (pointer:coarse){.cup-t small{display:none}.tok{touch-action:manipulation}.board{touch-action:manipulation}}
@@ -64,18 +87,19 @@ display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
 .corner .nm .dot{width:.42em;height:.42em;margin:0;box-shadow:0 0 0 1.5px var(--st1,#f3c55c),0 1px 2px rgba(0,0,0,.6)}
 /* the name looks embroidered: satin-stitch stripes in the cloth's own thread, slightly raised */
 .corner[data-side="l"]{transform:rotate(var(--unrot,0deg)) translate(-100%,-50%)}
+.corner[data-side="c"]{transform:rotate(var(--unrot,0deg)) translate(-50%,-50%)}
 .corner[data-side="r"]{transform:rotate(var(--unrot,0deg)) translate(0,-50%)}
 .corner[data-side="tl"]{transform:rotate(var(--unrot,0deg)) translate(0,-100%)}
 .corner[data-side="br"]{transform:rotate(var(--unrot,0deg)) translate(-100%,0)}
 [hidden]{display:none!important}
 .corner .nmt{font-family:"Lobster","Kurale",cursive;font-weight:400;letter-spacing:.01em;padding:0 3px 2px;
-  background:repeating-linear-gradient(62deg,var(--st0,#d99a26) 0 1.2px,var(--st1,#f3c55c) 1.2px 2.4px);-webkit-background-clip:text;background-clip:text;color:transparent;
-  opacity:.92;filter:drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 0 1.5px color-mix(in srgb,var(--pc) 55%,transparent))}
+  background:repeating-linear-gradient(62deg,var(--n0,#d99a26) 0 1.2px,var(--n1,#f3c55c) 1.2px 2.4px);-webkit-background-clip:text;background-clip:text;color:transparent;
+  opacity:.95;filter:drop-shadow(0 1px 0 var(--ol,rgba(0,0,0,.6))) drop-shadow(0 0 1px var(--ol,rgba(0,0,0,.45)))}
 .corner .meta{font-size:clamp(8.5px,1.3vw,11px);line-height:1.15;color:var(--label,#d8c7a4);opacity:.85}
 .corner.active .nmt{animation:myturn 2.2s ease-in-out infinite}
 .corner.active .dot{animation:myturn 2.2s ease-in-out infinite}
-@keyframes myturn{0%,100%{opacity:.75;filter:drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 0 1px color-mix(in srgb,var(--pc) 40%,transparent))}
-  50%{opacity:1;filter:drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 0 4px color-mix(in srgb,var(--pc) 75%,transparent))}}
+@keyframes myturn{0%,100%{opacity:.8;filter:drop-shadow(0 1px 0 var(--ol,rgba(0,0,0,.6))) drop-shadow(0 0 1px var(--ol,rgba(0,0,0,.45)))}
+  50%{opacity:1;filter:drop-shadow(0 1px 0 var(--ol,rgba(0,0,0,.6))) drop-shadow(0 0 5px color-mix(in srgb,var(--pc) 80%,transparent))}}
 .corner.off{opacity:.35}
 .heap{position:absolute;inset:0;pointer-events:none;z-index:3}
 .heap .tok{position:absolute;pointer-events:auto;width:calc(100% / var(--n) * .72)}
@@ -196,7 +220,7 @@ details.sec .log{margin-bottom:12px}
 .cupbtn:active:not(:disabled){transform:translateY(1px) scale(.98)}
 .cupbtn:focus-visible{outline:3px solid #fff;outline-offset:4px;border-radius:12px}
 .cupbtn:disabled{cursor:default;opacity:.4;filter:saturate(.5)}
-.cup{width:104px;height:116px;transform-origin:50% 90%;animation:sway 2.6s ease-in-out infinite}
+.cup{width:124px;height:138px;transform-origin:50% 90%;animation:sway 2.6s ease-in-out infinite}
 .cupbtn:disabled .cup{animation:none}
 .cupbtn:hover:not(:disabled) .cup{animation:sway .9s ease-in-out infinite}
 .cup .cup-dice{transform-origin:50% 100%;animation:peek 2.6s ease-in-out infinite}
@@ -305,7 +329,7 @@ select{font:inherit;background:var(--table-2);color:var(--ink);border:1px solid 
   .dock .status{font-size:17px;min-height:0;flex:1;min-width:0;order:2}
   .dock .turnbar{order:1}
   .dock{border-bottom:0;margin-bottom:0}
-  .cupbtn{flex-direction:row;gap:8px;padding:0}.cup{width:62px;height:70px}.cup-t b{font-size:20px}
+  .cupbtn{flex-direction:row;gap:8px;padding:0}.cup{width:76px;height:86px}.cup-t b{font-size:20px}
   .panel{display:flex;flex-direction:column}
   .dock{order:-1}
 }
@@ -317,7 +341,7 @@ html,body{overflow-x:hidden}
   html,body{background:radial-gradient(120% 90% at 50% 35%,var(--vel0,#26306a),var(--vel1,#1b2353) 60%,var(--vel2,#121839))!important}
   body{padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(18px, env(safe-area-inset-right, 0px));padding-top:16px}
   header{gap:8px}header p{display:none}h1{font-size:30px}
-  .cloth{width:112%;margin:0 -6%;filter:none}
+  .cloth{width:112%;margin:0 -6%;padding:7.725%;filter:none} /* padding = 6.897% of the cloth's own width, so the drawing and the cells line up */
   .art .fringe{display:none}
   .art .fringe{display:none}
   .edge{display:block;position:fixed;z-index:40;pointer-events:none}
@@ -339,8 +363,15 @@ html,body{overflow-x:hidden}
 <span class="edge t"></span><span class="edge b"></span><span class="edge l"></span><span class="edge r"></span>
 <div class="wrap">
   <header>
-    <h1>Чаупар</h1>
-    <p>Два кубика, шесть камней у каждого, до четырёх игроков, каждый сам за себя. Обойдите крест и первым приведите все камни в центр.</p>
+    <div class="ttl"><h1>Чаупар</h1>
+    <p>Два кубика, шесть камней у каждого, до четырёх игроков, каждый сам за себя. Обойдите крест и первым приведите все камни в центр.</p></div>
+    <button class="menubtn" id="menuBtn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 54 54" aria-hidden="true"><defs><pattern id="mstn" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(55)"><rect width="3" height="3" fill="#d99a26"/><rect width="1.4" height="3" fill="#f6cf6a"/></pattern>
+        <radialGradient id="mvel" cx="40%" cy="35%"><stop offset="0" stop-color="#2d3a7e"/><stop offset="1" stop-color="#141a42"/></radialGradient></defs>
+        <circle cx="27" cy="27" r="25" fill="url(#mvel)" stroke="url(#mstn)" stroke-width="3.5"/>
+        <circle cx="27" cy="27" r="19.5" fill="none" stroke="#3fc0c4" stroke-width="1.3" stroke-dasharray="2.6 1.4"/>
+        <g stroke="url(#mstn)" stroke-width="3.4" stroke-linecap="round"><path d="M17 20H37M17 27H37M17 34H37"/></g></svg>
+    </button>
   </header>
   <div class="main">
     <div class="cloth"><svg class="art" id="art" viewBox="-18 -18 210 210" aria-hidden="true"></svg><div class="board" id="board" aria-label="Игровое поле"></div></div>
@@ -350,26 +381,19 @@ html,body{overflow-x:hidden}
       <div class="dice" id="dice" hidden></div>
       <div class="turnbar">
         <button class="cupbtn" id="roll" type="button" aria-label="Бросить кубики">
-          <svg class="cup" viewBox="0 0 64 72" aria-hidden="true">
-            <defs>
-              <linearGradient id="leather" x1="0" x2="1"><stop offset="0" stop-color="#5a2a12"/><stop offset=".35" stop-color="#9a5427"/><stop offset=".6" stop-color="#7a3d1b"/><stop offset="1" stop-color="#3e1b0a"/></linearGradient>
-              <linearGradient id="band" x1="0" x2="1"><stop offset="0" stop-color="#a87418"/><stop offset=".4" stop-color="#ffd977"/><stop offset="1" stop-color="#8a5a10"/></linearGradient>
-            </defs>
-            <g class="cup-dice"><rect x="20" y="4" width="13" height="13" rx="3" fill="#f0a234" transform="rotate(-14 26 10)"/><circle cx="24.5" cy="8" r="1.4" fill="#2a1204"/><circle cx="28" cy="12" r="1.4" fill="#2a1204"/>
-              <rect x="31" y="7" width="13" height="13" rx="3" fill="#8a46b6" transform="rotate(12 37 13)"/><circle cx="37.5" cy="13.5" r="1.4" fill="#f5e1a0"/></g>
-            <path d="M10 16 H54 L49 66 Q32 71 15 66 Z" fill="url(#leather)"/>
-            <ellipse cx="32" cy="16" rx="22" ry="5" fill="#2a1206"/>
-            <path d="M10 16 Q32 23 54 16" fill="none" stroke="url(#band)" stroke-width="3"/>
-            <path d="M12.5 40 Q32 46 51.5 40" fill="none" stroke="url(#band)" stroke-width="2.4"/>
-            <path d="M14.6 61 Q32 67 49.4 61" fill="none" stroke="url(#band)" stroke-width="2.4"/>
-            <path d="M18 24 L20 58" stroke="rgba(255,220,170,.22)" stroke-width="3" stroke-linecap="round"/>
-          </svg>
+          <svg class="cup" viewBox="0 0 64 72" aria-hidden="true"></svg>
           <span class="cup-t"><b>Бросить</b><small id="hint">или пробел</small></span>
         </button>
       </div>
       </div>
       <div id="choice" class="row" hidden></div>
       <div id="overBox" hidden class="over"></div>
+    </div>
+  </div>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="menu" aria-label="Меню" aria-hidden="true">
+  <div class="drawer-head"><b>Меню</b><button class="xbtn" id="menuClose" type="button" aria-label="Закрыть меню">×</button></div>
       <details class="sec" id="sec-online" hidden>
         <summary>Онлайн</summary>
         <div class="setrow"><label for="myName">Ваше имя</label><input id="myName" type="text" maxlength="18" placeholder="Имя" autocomplete="nickname"></div>
@@ -410,6 +434,8 @@ html,body{overflow-x:hidden}
         <summary>Оформление</summary>
         <div class="setlbl">Поле</div>
         <div class="themes" role="radiogroup" aria-label="Поле" id="themes"></div>
+        <div class="setlbl">Стакан</div>
+        <div class="pick" role="radiogroup" aria-label="Стакан" id="cupPick"></div>
         <div class="setlbl">Кубики</div>
         <div class="pick" role="radiogroup" aria-label="Кубики" id="dicePick"></div>
         <div class="setlbl">Фишки</div>
@@ -438,9 +464,7 @@ html,body{overflow-x:hidden}
           <p>Индийские миниатюры изображают, как в чаупар играют Шива и Парвати. Сант Кирпал Сингх посвятил игре главу «Жизнь как игра в чаупар» в сборнике «Духовный эликсир».</p>
         </div>
       </details>
-    </div>
-  </div>
-</div>
+</aside>
 
 <script>
 (function(){
@@ -599,18 +623,18 @@ board.style.setProperty('--n',N);
 const HEAP_OFF=[[0,0],[-.2,-.95],[.68,-.45],[-.95,-.15],[.5,-1.4],[-.82,-1.25]];
 const HEAP_ROT=[12,-28,41,-9,63,-47];
 const rotF=(rc,n)=>{let [r,c]=rc;for(let i=0;i<n;i++)[r,c]=[N-1-c,r];return [r,c];};
-const HEAP=[0,1,2,3].map(p=>HEAP_OFF.map(([dr,dc],k)=>{const j=Math.sin((k+1)*(p+3)*1.7)*.08;return rotF([E-1.95+dr+j,L-2.2+dc-j],p);}));
+const HEAP=[0,1,2,3].map(p=>HEAP_OFF.map(([dr,dc],k)=>{const j=Math.sin((k+1)*(p+3)*1.7)*.08;return rotF([E-1.05+dr+j,L-1.85+dc-j],p);}));
 const heaps=[0,1,2,3].map(()=>{const h=document.createElement('div');h.className='heap';board.appendChild(h);return h;});
 const GLOW=['#ffffff','#5b8cff','#ff4a3a','#000000'];
 // where each name sits: right next to that player's start cell, on the outside of the arm, clear of the embroidery
-const LABEL_AT=[[L-.15,E+.55],[N-.15,L+3.12],[L+3.15,.45],[.15,L-.12]];
+const LABEL_AT=[[L+1.5,N+.46],[N-.1,L+3.45],[L+1.5,-.46],[.1,L-.45]];
 const corners=[];
-const SIDES=['l','br','r','tl'];
+const SIDES=['c','l','c','r'];
 // The board turns so that the viewer's colour is at the bottom. VIEW = how many quarter turns (clockwise on screen).
 let VIEW=0;
 const s2b=([x,y],v)=>{for(let i=0;i<v;i++)[x,y]=[y,N-x];return [x,y];}; // screen grid point -> board grid point
 const LAB_BOARD=[[0,0],[0,0],[0,0],[0,0]],LAB_CENTER=[[0,0],[0,0],[0,0],[0,0]];
-const LAB_MID=[[L-1.7,E+.55],[N-1.7,L+3.45],[L+4.7,.45],[1.7,L-.45]];
+const LAB_MID=[[L+1.5,N+.46],[N-1.7,L+3.45],[L+1.5,-.46],[1.7,L-.45]];
 function placeLabels(){
   corners.forEach((d,q)=>{const sIdx=(q-VIEW+4)%4,[x,y]=s2b(LABEL_AT[sIdx],VIEW);
     LAB_BOARD[q]=[x,y];LAB_CENTER[q]=s2b(LAB_MID[sIdx],VIEW);
@@ -627,6 +651,8 @@ function applyView(){
 for(let p=0;p<4;p++){
   const d=document.createElement('div');d.className='corner';
   d.style.setProperty('--pc',GLOW[p]);
+  const NC=[['#fffdf6','#d9cfbd'],['#a9c2ff','#4f74d9'],['#ffa293','#d0372c'],['#55555f','#131116']][p];
+  d.style.setProperty('--n0',NC[0]);d.style.setProperty('--n1',NC[1]);if(p===3)d.style.setProperty('--ol','rgba(255,236,196,.85)');
   d.innerHTML=`<div class="nm"><span class="dot" style="background:${DOTC[p]}"></span><span class="nmt"></span></div>`;
   board.appendChild(d);corners.push(d);
 }
@@ -1112,13 +1138,59 @@ function buildSets(){
   buildPick('piecePick',PIECESETS,()=>pieceSet,'pieces',[0,1,2,3].map(p=>`<span class="tok c${p}"></span>`).join(''),v=>pieceSet=v);
 }
 applySets();buildSets();
+// ---- dice cups: brown leather, paper, black leather, wood ----
+const CUPS={leather:'Кожаный',paper:'Бумажный',black:'Чёрный кожаный',wood:'Деревянный'};
+let cupSet='leather';try{const c=localStorage.getItem('chaupar-cup');if(CUPS[c])cupSet=c;}catch(e){}
+function cupSVG(k,u=''){
+  const T={leather:{b:['#5a2a12','#9a5427','#7a3d1b','#3e1b0a'],h:['#a87418','#ffd977','#8a5a10'],rim:'#2a1206'},
+    black:{b:['#09090b','#44444c','#1f1f25','#040405'],h:['#a87418','#ffd977','#8a5a10'],rim:'#030304'},
+    paper:{b:['#cdb88e','#f6eedb','#e5d4ae','#b29a6c'],h:null,rim:'#fbf6ea'},
+    wood:{b:['#5e3412','#c0823f','#8d5426','#46250b'],h:['#2c1a0b','#6e4b28','#1e1107'],rim:'#2a170a'}}[k];
+  const g=(id,c)=>`<linearGradient id="${id}${u}" x1="0" x2="1">${c.map((x,i)=>`<stop offset="${i/(c.length-1)}" stop-color="${x}"/>`).join('')}</linearGradient>`;
+  let extra='';
+  if(k==='paper'){ // ribbed paper with a printed band
+    for(let i=0;i<9;i++){const t=i/8,x1=12+t*40,x2=16.5+t*31;extra+=`<path d="M${x1} 19 L${x2} 64" stroke="rgba(120,95,50,.25)" stroke-width="1"/>`;}
+    extra+=`<path d="M13.2 33 Q32 38 50.8 33 L50 41 Q32 46 14 41 Z" fill="#2c8f93" opacity=".85"/><path d="M14 37 Q32 42 50 37" stroke="#f3c55c" stroke-width="1" stroke-dasharray="2 1.2" fill="none"/>`;
+  }
+  if(k==='wood'){ // grain
+    for(let i=0;i<6;i++)extra+=`<path d="M${17+i*6} 20 C${15+i*6} 32 ${21+i*6} 44 ${18+i*5.4} 64" stroke="rgba(40,20,5,.35)" stroke-width="1.1" fill="none"/>`;
+  }
+  const bands=T.h?`<path d="M10 16 Q32 23 54 16" fill="none" stroke="url(#cb${u})" stroke-width="3"/><path d="M12.5 40 Q32 46 51.5 40" fill="none" stroke="url(#cb${u})" stroke-width="2.4"/><path d="M14.6 61 Q32 67 49.4 61" fill="none" stroke="url(#cb${u})" stroke-width="2.4"/>`
+    :`<ellipse cx="32" cy="16.5" rx="22.5" ry="5.4" fill="none" stroke="${T.rim}" stroke-width="2.6"/><path d="M15 66 Q32 71 49 66" stroke="rgba(120,95,50,.4)" stroke-width="1.2" fill="none"/>`;
+  return `<defs>${g('cl',T.b)}${T.h?g('cb',T.h):''}</defs>
+    <g class="cup-dice"><rect x="20" y="4" width="13" height="13" rx="3" fill="#f0a234" transform="rotate(-14 26 10)"/><circle cx="24.5" cy="8" r="1.4" fill="#2a1204"/><circle cx="28" cy="12" r="1.4" fill="#2a1204"/>
+      <rect x="31" y="7" width="13" height="13" rx="3" fill="#8a46b6" transform="rotate(12 37 13)"/><circle cx="37.5" cy="13.5" r="1.4" fill="#f5e1a0"/></g>
+    <path d="M10 16 H54 L49 66 Q32 71 15 66 Z" fill="url(#cl${u})"/>${extra}
+    <ellipse cx="32" cy="16" rx="22" ry="5" fill="${k==='paper'?'#3a2a14':T.rim}"/>${bands}
+    <path d="M18 24 L20 58" stroke="rgba(255,240,210,${k==='black'?.18:.22})" stroke-width="3" stroke-linecap="round"/>`;
+}
+function buildCups(){
+  const el=$('cupPick');el.innerHTML='';
+  Object.entries(CUPS).forEach(([id,name],i)=>{
+    const b=document.createElement('button');b.type='button';b.className='th';b.setAttribute('role','radio');b.setAttribute('aria-checked',id===cupSet);b.id='cup-'+id;
+    b.innerHTML=`<span class="prev"><svg viewBox="0 0 64 72" width="34" height="38" aria-hidden="true">${cupSVG(id,'p'+i)}</svg></span>${name}`;
+    b.addEventListener('click',()=>setCup(id));el.appendChild(b);
+  });
+}
+function setCup(k){cupSet=k;try{localStorage.setItem('chaupar-cup',k);}catch(e){}$('roll').querySelector('svg.cup').innerHTML=cupSVG(k);buildCups();}
+setCup(cupSet);
 (()=>{const sel=$('level');sel.innerHTML=Object.entries(LEVELS).map(([v,t])=>`<option value="${v}">${t}</option>`).join('');sel.value=level;
   sel.addEventListener('change',()=>{level=sel.value;try{localStorage.setItem('chaupar-level',level);}catch(e){}});})();
 document.querySelectorAll('details.sec').forEach(d=>{
   try{const v=localStorage.getItem('chaupar-'+d.id);if(v!==null)d.open=v==='1';}catch(e){}
   d.addEventListener('toggle',()=>{try{localStorage.setItem('chaupar-'+d.id,d.open?'1':'0');}catch(e){}});
 });
-$('newGame').addEventListener('click',()=>newGame(S.seats.slice()));
+// ---- the menu ----
+function openMenu(on){
+  const m=$('menu'),sc=$('scrim'),b=$('menuBtn');m.classList.toggle('on',on);sc.classList.toggle('on',on);
+  m.setAttribute('aria-hidden',!on);b.setAttribute('aria-expanded',on);
+  if(on)setTimeout(()=>$('menuClose').focus(),60);else b.focus();
+}
+$('menuBtn').addEventListener('click',()=>openMenu(true));
+$('menuClose').addEventListener('click',()=>openMenu(false));
+$('scrim').addEventListener('click',()=>openMenu(false));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('menu').classList.contains('on'))openMenu(false);});
+$('newGame').addEventListener('click',()=>{newGame(S.seats.slice());openMenu(false);});
 
 function buildSeats(){
   const el=$('seats');el.innerHTML='';
@@ -1482,7 +1554,7 @@ $('netCreate').addEventListener('click',()=>Net.create());
 $('netJoin').addEventListener('click',()=>Net.join($('joinCode').value));
 $('joinCode').addEventListener('keydown',e=>{if(e.key==='Enter')Net.join($('joinCode').value);});
 $('netLeave').addEventListener('click',()=>Net.leave());
-$('netStart').addEventListener('click',()=>Net.startGame());
+$('netStart').addEventListener('click',()=>{Net.startGame();openMenu(false);});
 $('netRestart').addEventListener('click',()=>{if(NET.host){S.phase='lobby';S.seats=S.seats.map((x,p)=>x==='bot'&&!S.away[p]?'open':x);Object.assign(S,fresh(S.seats,S.owners,S.names));S.phase='lobby';render();Net.push();}});
 $('myName').addEventListener('change',()=>{const n=Net.name();if(NET.on){Net.send('name',{name:n});if(NET.host){for(let p=0;p<4;p++)if(S.owners[p]===NET.id)S.names[p]=n;render();Net.push();}else Net.intent({t:'name',name:n});}});
 $('copyLink').addEventListener('click',async()=>{const i=$('roomLink');
