@@ -185,6 +185,14 @@ function onText(c, text) {
     toRoom(room, { type: 'fx', id: c.id, name: me.name, kind, to });
     return;
   }
+  if (d.type === 'voice') {                       // walkie-talkie audio: small chunks passed straight on
+    const data = typeof d.d === 'string' && d.d.length <= 16000 && /^[A-Za-z0-9+/=]*$/.test(d.d) ? d.d : '';
+    me.vT = (me.vT || []).filter(t => now - t < 1000);
+    if (me.vT.length >= 25) return;
+    me.vT.push(now);
+    toRoom(room, { type: 'voice', id: c.id, name: me.name, d: data, end: !!d.end }, c);
+    return;
+  }
   if (d.type === 'leave') { leave(c); return; }
 }
 
