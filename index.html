@@ -46,6 +46,12 @@ header p{margin:0;color:var(--muted);max-width:56ch;font-size:14px}
 .menubtn:hover{transform:scale(1.06) rotate(8deg)}
 .menubtn:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .menubtn svg{width:100%;height:100%;display:block}
+.sndbtn{grid-column:1;justify-self:start}
+.sndbtn .off{display:none}
+.sndbtn[aria-pressed="false"] .on{display:none}.sndbtn[aria-pressed="false"] .off{display:inline}
+.sndbtn[aria-pressed="false"] svg{opacity:.7}.sndbtn[aria-pressed="false"] .ring{stroke:#8a8fa8}
+.sndbtn[aria-pressed="true"] .ring{animation:ringglow 2.4s ease-in-out infinite}
+@keyframes ringglow{50%{stroke:#7fe6e9}}
 /* the menu: a velvet panel that slides in from the side */
 .scrim{position:fixed;inset:0;background:rgba(6,6,14,.55);backdrop-filter:blur(2px);z-index:60;opacity:0;pointer-events:none;transition:opacity .3s}
 .scrim.on{opacity:1;pointer-events:auto}
@@ -326,10 +332,11 @@ select{font:inherit;background:var(--table-2);color:var(--ink);border:1px solid 
     padding:10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
     background:linear-gradient(180deg,rgba(26,22,18,.86),#1a1612 40%);backdrop-filter:blur(6px);border-top:1px solid rgba(227,167,47,.25);
     display:flex;align-items:center;gap:12px}
-  .dock .status{font-size:17px;min-height:0;flex:1;min-width:0;order:2}
-  .dock .turnbar{order:1}
+  .dock{flex-direction:column;align-items:center;gap:2px;text-align:center}
+  .dock .status{font-size:16px;min-height:0;flex:none;width:100%;order:2;text-align:center}
+  .dock .turnbar{order:1;justify-content:center}
   .dock{border-bottom:0;margin-bottom:0}
-  .cupbtn{flex-direction:row;gap:8px;padding:0}.cup{width:76px;height:86px}.cup-t b{font-size:20px}
+  .cupbtn{padding:0}.cup{width:104px;height:116px}.cup-t{display:none}
   .panel{display:flex;flex-direction:column}
   .dock{order:-1}
 }
@@ -363,6 +370,15 @@ html,body{overflow-x:hidden}
 <span class="edge t"></span><span class="edge b"></span><span class="edge l"></span><span class="edge r"></span>
 <div class="wrap">
   <header>
+    <button class="menubtn sndbtn" id="audioBtn" type="button" aria-label="Звук" aria-pressed="true">
+      <svg viewBox="0 0 54 54" aria-hidden="true"><defs><pattern id="sstn" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(55)"><rect width="3" height="3" fill="#d99a26"/><rect width="1.4" height="3" fill="#f6cf6a"/></pattern>
+        <radialGradient id="svel" cx="40%" cy="35%"><stop offset="0" stop-color="#2d3a7e"/><stop offset="1" stop-color="#141a42"/></radialGradient></defs>
+        <circle cx="27" cy="27" r="25" fill="url(#svel)" stroke="url(#sstn)" stroke-width="3.5"/>
+        <circle class="ring" cx="27" cy="27" r="19.5" fill="none" stroke="#3fc0c4" stroke-width="1.3" stroke-dasharray="2.6 1.4"/>
+        <path d="M15 23H20L27 17V37L20 31H15Z" fill="url(#sstn)" stroke="url(#sstn)" stroke-width="1.6" stroke-linejoin="round"/>
+        <g class="on" stroke="url(#sstn)" stroke-width="2.6" stroke-linecap="round" fill="none"><path d="M31 22.5Q34.5 27 31 31.5"/><path d="M34.5 19Q40.5 27 34.5 35"/></g>
+        <g class="off" stroke="#e8735f" stroke-width="2.8" stroke-linecap="round"><path d="M31.5 22L39.5 32M39.5 22L31.5 32"/></g></svg>
+    </button>
     <div class="ttl"><h1>Чаупар</h1>
     <p>Два кубика, шесть камней у каждого, до четырёх игроков, каждый сам за себя. Обойдите крест и первым приведите все камни в центр.</p></div>
     <button class="menubtn" id="menuBtn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="menu">
@@ -1093,9 +1109,15 @@ $('roll').addEventListener('click',()=>{if(canAct())roll();});
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&!e.target.closest('select,button,summary,input')){e.preventDefault();if(canAct())roll();}});
 $('dice').addEventListener('click',e=>{const b=e.target.closest('.die');if(!b||isBot()||S.phase!=='move')return;const i=+b.dataset.i;if(S.dice[i]&&!S.dice[i].used){S.sel=i;S.choice=null;render();}});
 const sndBtn=$('snd');const sndLabel=()=>{sndBtn.textContent='Звук: '+(Snd.on?'вкл':'выкл');sndBtn.setAttribute('aria-pressed',Snd.on);};sndLabel();
-sndBtn.addEventListener('click',()=>{Snd.toggle();sndLabel();});
+sndBtn.addEventListener('click',()=>{Snd.toggle();sndLabel();if(typeof audioLabel==='function')audioLabel();});
+// one tap mutes or unmutes everything (effects and music)
+const audioBtn=$('audioBtn');
+const audioLabel=()=>{const on=Snd.on||Music.on;audioBtn.setAttribute('aria-pressed',on);audioBtn.setAttribute('aria-label',on?'Выключить звук':'Включить звук');};
+audioBtn.addEventListener('pointerdown',e=>e.stopPropagation());
+audioBtn.addEventListener('click',()=>{const on=Snd.on||Music.on;if(Snd.on===on)Snd.toggle();if(Music.on===on)Music.toggle();if(!on){if(!Snd.on)Snd.toggle();if(!Music.on)Music.toggle();}audioLabel();sndLabel&&sndLabel();musLabel&&musLabel();});
 const musBtn=$('mus');const musLabel=()=>{musBtn.textContent='Музыка: '+(Music.on?'вкл':'выкл');musBtn.setAttribute('aria-pressed',Music.on);};musLabel();
-musBtn.addEventListener('pointerdown',e=>e.stopPropagation());musBtn.addEventListener('click',()=>{Music.toggle();musLabel();});
+musBtn.addEventListener('pointerdown',e=>e.stopPropagation());musBtn.addEventListener('click',()=>{Music.toggle();musLabel();audioLabel();});
+audioLabel();
 function buildTracks(){
   const el=$('tracks');el.innerHTML='';
   Object.entries(Music.TRACKS).forEach(([id,T])=>{
