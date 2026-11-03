@@ -130,7 +130,7 @@ function onText(c, text) {
     let r;
     if (d.type === 'create') {
       if (rooms.size > 5000) return reply({ ok: false, error: 'Сервер переполнен, попробуйте позже' });
-      r = { code: newCode(), host: id, members: new Map(), state: null, emptyAt: 0 };
+      r = { code: newCode(), host: id, members: new Map(), state: null, emptyAt: 0, chat: [] };
       rooms.set(r.code, r);
     } else {
       r = rooms.get(String(d.code || '').toUpperCase().trim());
@@ -142,7 +142,7 @@ function onText(c, text) {
     r.members.set(id, { name: cleanName(d.name), conn: c });
     c.id = id; c.room = r.code; r.emptyAt = 0;
     pickHost(r);
-    reply({ ok: true, code: r.code, host: r.host, members: members(r), state: r.host === id ? null : r.state, hostState: r.host === id ? r.state : null });
+    reply({ ok: true, code: r.code, host: r.host, members: members(r), state: r.host === id ? null : r.state, hostState: r.host === id ? r.state : null, chat: r.chat || [] });
     shareMembers(r);
     return;
   }
@@ -163,6 +163,28 @@ function onText(c, text) {
     return;
   }
   if (d.type === 'name') { me.name = cleanName(d.name); shareMembers(room); return; }
+  // room chat and playful throws (snowball, tomato, egg, grenade), lightly rate-limited
+  const now = Date.now();
+  if (d.type === 'chat') {
+    const text = String(d.text || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 200);
+    if (!text) return;
+    me.chatT = (me.chatT || []).filter(t => now - t < 10000);
+    if (me.chatT.length >= 8) return;
+    me.chatT.push(now);
+    const m = { id: c.id, name: me.name, text, ts: now };
+    room.chat = (room.chat || []).concat(m).slice(-40);
+    toRoom(room, Object.assign({ type: 'chat' }, m));
+    return;
+  }
+  if (d.type === 'fx') {
+    const kind = ['snow', 'tomato', 'egg', 'grenade'].includes(d.kind) ? d.kind : null;
+    const to = Number.isInteger(d.to) && d.to >= 0 && d.to < 4 ? d.to : null;
+    if (!kind || to === null) return;
+    if (now - (me.fxT || 0) < 1200) return;
+    me.fxT = now;
+    toRoom(room, { type: 'fx', id: c.id, name: me.name, kind, to });
+    return;
+  }
   if (d.type === 'leave') { leave(c); return; }
 }
 

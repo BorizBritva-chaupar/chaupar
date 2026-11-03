@@ -86,6 +86,52 @@ header p{margin:0;color:var(--muted);max-width:56ch;font-size:14px}
 .center .h{font-family:var(--display);font-size:clamp(10px,2.2vw,15px);display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1;z-index:1;color:#f6e7c3;text-shadow:0 1px 2px #000}
 .center .h i{display:inline-block;width:.8em;height:.8em;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
 
+.chat{display:flex;flex-direction:column;gap:6px;width:100%;max-width:520px;margin:6px auto 0;padding:8px 10px;border-radius:14px;
+  background:rgba(8,10,28,.35);border:1px solid rgba(227,167,47,.28)}
+.chat-log{list-style:none;margin:0;padding:0;max-height:66px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;font-size:14px;line-height:1.3;color:#efe4cc;scrollbar-width:thin}
+.chat-log li{overflow-wrap:anywhere}.chat-log b{font-weight:600;margin-right:4px}
+.chat-log .sys{color:var(--muted);font-style:italic}
+.chat-log:empty::before{content:"Сообщения увидят все в комнате. Брось снежок — выбери предмет и нажми на имя.";color:var(--muted);font-size:13px}
+.chat-row{display:flex;align-items:center;gap:6px}
+.throws{display:flex;gap:2px;flex:none}
+.throw{appearance:none;border:0;background:none;padding:2px;width:36px;height:36px;border-radius:50%;cursor:pointer;transition:transform .15s,background .2s}
+.throw svg{width:100%;height:100%;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+.throw:hover{transform:translateY(-2px) scale(1.08)}
+.throw.armed{background:rgba(243,197,92,.25);box-shadow:0 0 0 2px #f3c55c;animation:armed 1s ease-in-out infinite}
+@keyframes armed{50%{transform:scale(1.12)}}
+.throw:focus-visible,.chat-send:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#chatInput{flex:1;min-width:0;font:inherit;font-size:15px;background:rgba(0,0,0,.3);color:var(--ink);border:1px solid rgba(227,167,47,.45);border-radius:18px;padding:8px 12px}
+#chatInput:disabled{opacity:.55}
+.chat-send{appearance:none;flex:none;width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;color:#1e1405;background:linear-gradient(180deg,#f3c55c,#d99a26)}
+.chat-send svg{width:20px;height:20px;display:block;margin:auto}
+.chat-send:disabled{opacity:.4;cursor:default}
+/* picking a target: every name becomes a target */
+.board.aiming .corner{pointer-events:auto;cursor:crosshair}
+.board.aiming .corner .nmt{animation:aim .8s ease-in-out infinite}
+@keyframes aim{50%{filter:drop-shadow(0 0 6px #ff6a4a) drop-shadow(0 0 2px #fff)}}
+.bubble{position:absolute;z-index:30;pointer-events:none;max-width:160px;padding:5px 9px;border-radius:12px;background:#fdf6e3;color:#2a1a0e;font:500 13px/1.25 var(--body);
+  box-shadow:0 4px 10px rgba(0,0,0,.45);transform:translate(-50%,calc(-100% - 12px)) rotate(var(--unrot,0deg));animation:bub 4s ease forwards}
+@keyframes bub{0%{opacity:0;transform:translate(-50%,calc(-100% - 4px)) rotate(var(--unrot,0deg)) scale(.8)}8%,85%{opacity:1;transform:translate(-50%,calc(-100% - 12px)) rotate(var(--unrot,0deg))}100%{opacity:0}}
+.missile{position:fixed;left:0;top:0;width:42px;height:42px;z-index:70;pointer-events:none}
+.missile svg{width:100%;height:100%}
+.hitmark{position:fixed;z-index:69;pointer-events:none;width:70px;height:70px;transform:translate(-50%,-50%);animation:hit 1.4s ease-out forwards}
+@keyframes hit{0%{transform:translate(-50%,-50%) scale(.3);opacity:1}30%{transform:translate(-50%,-50%) scale(1.15)}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}
+/* what the hit player sees over the whole screen */
+.splash{position:fixed;inset:0;z-index:80;pointer-events:none;overflow:hidden}
+.splash>*{position:absolute}
+.splash .frost{inset:0;background:radial-gradient(ellipse at center,rgba(255,255,255,0) 35%,rgba(235,245,255,.92) 85%);animation:fade 2.8s ease forwards}
+.splash .flake{top:-20px;width:var(--s);height:var(--s);border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;animation:fall var(--d) linear forwards}
+@keyframes fall{to{transform:translate(var(--x),110vh)}}
+.splash .blob{animation:drip 3s ease-in forwards}
+@keyframes drip{0%{transform:scale(.4);opacity:0}8%{transform:scale(1.05);opacity:1}20%{transform:scale(1)}80%{opacity:1}100%{transform:translateY(60px);opacity:0}}
+.splash .boom{inset:0;background:radial-gradient(circle at 50% 55%,#fff 0,#ffe27a 12%,#ff8a1e 30%,rgba(120,40,0,.0) 60%);animation:boom 1.2s ease-out forwards}
+@keyframes boom{0%{opacity:0;transform:scale(.3)}10%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.6)}}
+.splash .soot{inset:0;background:radial-gradient(circle at 30% 40%,rgba(20,16,12,.7),transparent 25%),radial-gradient(circle at 70% 60%,rgba(20,16,12,.6),transparent 22%),radial-gradient(circle at 50% 80%,rgba(20,16,12,.5),transparent 25%);animation:fade 3s 0.4s ease forwards;opacity:0}
+.splash .bang{left:50%;top:45%;transform:translate(-50%,-50%);font:400 clamp(48px,14vw,110px)/1 "Lobster","Kurale",cursive;color:#ffd77a;text-shadow:0 4px 0 #7a2a00,0 0 20px #ff8a1e;animation:bang 1.6s ease-out forwards}
+@keyframes bang{0%{transform:translate(-50%,-50%) scale(.3) rotate(-10deg);opacity:0}15%{transform:translate(-50%,-50%) scale(1.15) rotate(4deg);opacity:1}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
+@keyframes fade{0%{opacity:0}12%{opacity:1}70%{opacity:1}100%{opacity:0}}
+body.shaking .wrap{animation:jolt .5s ease-out}
+@media (prefers-reduced-motion:reduce){.splash .flake,.missile{display:none}}
 .corner{position:absolute;transform-origin:0 0;transform:rotate(var(--unrot,0deg)) translate(-50%,-50%);max-width:none;
 display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;white-space:nowrap;pointer-events:none;z-index:4;
   font-family:"Kurale","Forum",Georgia,serif;color:var(--label,#f6e7c3);text-shadow:0 1px 2px var(--label-sh,#000),0 0 6px var(--label-sh,#000);transition:color .25s}
@@ -356,7 +402,8 @@ html,body{overflow-x:hidden}
   .dock{position:static!important;flex:1;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center;text-align:center;padding:6px 0 10px!important;margin:0!important;border:0!important}
   .dock .turnbar{width:100%;display:flex;justify-content:center}
   .dock .status{width:100%;text-align:center!important;flex:none!important}
-  .cup{height:clamp(96px,18vh,170px)!important;width:auto!important;aspect-ratio:64/72}
+  .chat{margin-top:2px;padding:6px 8px}.chat-log{max-height:44px;font-size:13px}.throw{width:32px;height:32px}
+  .cup{height:clamp(80px,14vh,150px)!important;width:auto!important;aspect-ratio:64/72}
   .dock .status{font-size:clamp(15px,2.2vh,19px)}
   body{padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(18px, env(safe-area-inset-right, 0px));padding-top:16px}
   header{gap:8px}header p{display:none}h1{font-size:30px}
@@ -414,11 +461,20 @@ html,body{overflow-x:hidden}
         </button>
       </div>
       </div>
+      <section class="chat" id="chat" aria-label="Чат комнаты">
+        <ol class="chat-log" id="chatLog" aria-live="polite"></ol>
+        <form class="chat-row" id="chatForm" autocomplete="off">
+          <div class="throws" role="group" aria-label="Бросить в игрока"><button class="throw" type="button" data-kind="snow" aria-label="Снежок" title="Снежок"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="i-snow" cx="38%" cy="32%"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#e3efff"/><stop offset="1" stop-color="#a9c3e8"/></radialGradient></defs><circle cx="20" cy="21" r="13" fill="url(#i-snow)"/><circle cx="15" cy="17" r="2" fill="#fff"/><circle cx="24" cy="25" r="1.4" fill="#c6d8f2"/></svg></button><button class="throw" type="button" data-kind="tomato" aria-label="Помидор" title="Помидор"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="i-tom" cx="38%" cy="35%"><stop offset="0" stop-color="#ff8a6a"/><stop offset=".6" stop-color="#e2321f"/><stop offset="1" stop-color="#9c1309"/></radialGradient></defs><ellipse cx="20" cy="23" rx="14" ry="12" fill="url(#i-tom)"/><path d="M20 11 l-5 2 4 1 -3 4 4-2 4 2-3-4 4-1z" fill="#3c9a3a"/><ellipse cx="14.5" cy="19" rx="3" ry="2" fill="#fff" opacity=".45"/></svg></button><button class="throw" type="button" data-kind="egg" aria-label="Яйцо" title="Яйцо"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="i-egg" cx="38%" cy="30%"><stop offset="0" stop-color="#fffdf6"/><stop offset=".7" stop-color="#f1e3c6"/><stop offset="1" stop-color="#c9b48a"/></radialGradient></defs><path d="M20 6 C29 6 33 18 33 24 C33 31 27 35 20 35 C13 35 7 31 7 24 C7 18 11 6 20 6Z" fill="url(#i-egg)"/><ellipse cx="15" cy="16" rx="3" ry="4" fill="#fff" opacity=".7"/></svg></button><button class="throw" type="button" data-kind="grenade" aria-label="Граната" title="Граната"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><radialGradient id="i-gr" cx="38%" cy="35%"><stop offset="0" stop-color="#7c8f4a"/><stop offset=".7" stop-color="#4b5a26"/><stop offset="1" stop-color="#2c3514"/></radialGradient></defs><rect x="16" y="6" width="8" height="6" rx="1.5" fill="#9a9a9a"/><circle cx="28" cy="9" r="4" fill="none" stroke="#c9c9c9" stroke-width="2"/><ellipse cx="20" cy="24" rx="11" ry="12" fill="url(#i-gr)"/><path d="M12 20 H28 M12 26 H28 M17 13 V35 M23 13 V35" stroke="#2a3312" stroke-width="1.2" opacity=".6"/></svg></button></div>
+          <input id="chatInput" type="text" maxlength="200" placeholder="Написать всем…" aria-label="Сообщение в чат" enterkeyhint="send">
+          <button class="chat-send" type="submit" aria-label="Отправить"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20 21 12 3 4l2 7 9 1-9 1z" fill="currentColor"/></svg></button>
+        </form>
+      </section>
       <div id="choice" class="row" hidden></div>
       <div id="overBox" hidden class="over"></div>
     </div>
   </div>
 </div>
+<div class="splash" id="splash" aria-hidden="true"></div>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="menu" aria-label="Меню" aria-hidden="true">
   <div class="drawer-head"><b>Меню</b><button class="xbtn" id="menuClose" type="button" aria-label="Закрыть меню">×</button></div>
@@ -807,6 +863,11 @@ const Snd=(()=>{
     jailOut:t=>{tone(t,440,880,.25,'triangle',.12);},
     shelter:t=>{tone(t,660,0,.3,'sine',.14);tone(t+.08,990,0,.35,'sine',.1);},
     home:t=>{tone(t,784,0,.25,'sine',.14);tone(t+.1,1047,0,.4,'sine',.12);},
+    toss:t=>{noise(t,.35,1500,.9,.35,'bandpass');tone(t,500,900,.3,'sine',.05);},
+    splat:t=>{noise(t,.25,500,.7,1,'lowpass');tone(t,180,70,.2,'sine',.25);},
+    snow:t=>{noise(t,.4,3500,.6,.5,'highpass');noise(t+.05,.3,1200,.8,.4,'bandpass');},
+    crack:t=>{noise(t,.06,2500,2,.8);noise(t+.07,.2,700,1,.6,'lowpass');},
+    boom:t=>{noise(t,.9,180,.5,1.8,'lowpass');tone(t,110,30,.8,'sine',.7);noise(t+.02,.4,2000,.6,.5,'bandpass');},
     win:t=>{[523,659,784,1047].forEach((f,i)=>tone(t+i*.13,f,0,.45,'triangle',.14));}
   };
   return{play(n,delay=0){if(!on)return;const c=ensure();if(!c||c.state!=='running')return;try{FX[n](c.currentTime+delay/1000);}catch(e){}},
@@ -1437,7 +1498,9 @@ const Net={
       else if(d.type==='event')this.onEvent(d.ev);
       else if(d.type==='intent')this.onIntent(d.it);
       else if(d.type==='members'){NET.members=d.list||[];this.onMembers();}
-      else if(d.type==='host')this.onHost(d.host);};
+      else if(d.type==='host')this.onHost(d.host);
+      else if(d.type==='chat')Chat.onChat(d);
+      else if(d.type==='fx')Chat.onFx(d);};
     ws.onclose=()=>{if(NET.sock!==ws)return;NET.sock=null;
       if(NET.on){this.say('Связь потеряна, переподключаемся…');const t=Math.min(8000,800*2**this.retry++);setTimeout(()=>{if(NET.on&&!NET.sock)this.connect();},t);}};
   },
@@ -1459,6 +1522,8 @@ const Net={
   joined(r,re,auto){
     if(!r||!r.ok){if(!re)this.say(r&&r.error||'Комната не найдена');if(auto)history.replaceState(null,'',location.pathname);return;}
     const wasOn=NET.on&&NET.code===r.code;
+    if(!wasOn){$('chatLog').innerHTML='';(r.chat||[]).forEach(m=>Chat.onChat(m,true));}
+    setTimeout(()=>Chat.refresh(),0);
     NET.on=true;NET.code=r.code;NET.host=r.host===NET.id;NET.members=r.members||[];this.setUrl();
     if(r.state&&!NET.host){NET.queue=[];this.applyState(r.state);}
     if(NET.host){
@@ -1470,6 +1535,7 @@ const Net={
   leave(){
     if(NET.sock){this.send('leave');const ws=NET.sock;NET.sock=null;try{ws.close();}catch(e){}}
     NET.on=false;NET.host=true;NET.code=null;NET.queue=[];NET.waiting=false;history.replaceState(null,'',location.pathname);
+    $('chatLog').innerHTML='';Chat.refresh();
     newGame(['human','bot','bot','bot']);
   },
   setUrl(){try{history.replaceState(null,'',location.pathname+'?room='+NET.code);}catch(e){}},
@@ -1550,6 +1616,7 @@ const Net={
     render();this.push();
   },
   renderLobby(){
+    if(typeof Chat!=='undefined')Chat.refresh();
     const sec=$('sec-online');if(!sec)return;
     const out=$('netOut'),inn=$('netIn');
     out.hidden=NET.on;inn.hidden=!NET.on;
@@ -1594,6 +1661,84 @@ $('myName').addEventListener('change',()=>{const n=Net.name();if(NET.on){Net.sen
 $('copyLink').addEventListener('click',async()=>{const i=$('roomLink');
   if(navigator.share&&matchMedia('(pointer:coarse)').matches){try{await navigator.share({title:'Чаупар',text:'Заходи играть в чаупар! Код комнаты: '+NET.code,url:i.value});return;}catch(e){}}
   try{await navigator.clipboard.writeText(i.value);Net.say('Ссылка скопирована — отправьте её друзьям');}catch(e){i.select();Net.say('Выделите и скопируйте ссылку');}});
+
+// ================= Chat and throws =================
+const FX_NAMES={snow:'снежок',tomato:'помидор',egg:'яйцо',grenade:'гранату'};
+const Chat={
+  armed:null,last:0,
+  init(){
+    document.querySelectorAll('.throw').forEach(b=>b.addEventListener('click',()=>this.arm(b.dataset.kind===this.armed?null:b.dataset.kind)));
+    corners.forEach((d,p)=>d.addEventListener('click',e=>{if(!this.armed)return;e.stopPropagation();this.throwAt(p);}));
+    $('chatForm').addEventListener('submit',e=>{e.preventDefault();const i=$('chatInput'),t=i.value.trim();if(!t)return;
+      if(NET.on&&Net.send('chat',{text:t}))i.value='';});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&this.armed)this.arm(null);});
+    this.refresh();
+  },
+  refresh(){const on=NET.on;const i=$('chatInput');i.disabled=!on;i.placeholder=on?'Написать всем…':'Чат — в онлайн-комнате';
+    document.querySelector('.chat-send').disabled=!on;},
+  arm(kind){
+    this.armed=kind;document.querySelectorAll('.throw').forEach(b=>b.classList.toggle('armed',b.dataset.kind===kind));
+    board.classList.toggle('aiming',!!kind);
+    if(kind)this.sys('Нажмите на имя игрока, чтобы бросить '+FX_NAMES[kind]);
+  },
+  mySeat(){for(const p of ORDER)if(S.seats[p]==='human'&&(!NET.on||S.owners[p]===NET.id))return p;return null;},
+  throwAt(p){
+    const kind=this.armed;this.arm(null);if(!kind||!active(p))return;
+    if(Date.now()-this.last<1200)return;this.last=Date.now();
+    if(NET.on)Net.send('fx',{kind,to:p});
+    else this.play({kind,to:p,fromSeat:this.mySeat(),name:pname(this.mySeat()??0)});
+  },
+  sys(t){this.add(`<li class="sys">${esc(t)}</li>`);},
+  add(html){const log=$('chatLog');log.insertAdjacentHTML('beforeend',html);while(log.children.length>40)log.firstElementChild.remove();log.scrollTop=log.scrollHeight;},
+  seatOf(id){for(const p of ORDER)if(S.owners&&S.owners[p]===id)return p;return null;},
+  onChat(m,quiet){
+    const p=this.seatOf(m.id),col=p==null?'#f3c55c':['#fffdf6','#8fb0ff','#ff8a7a','#c9c2b4'][p];
+    this.add(`<li><b style="color:${col}">${esc(m.name||'Игрок')}:</b>${esc(m.text)}</li>`);
+    if(!quiet&&p!=null)this.bubble(p,m.text);
+  },
+  onFx(m){this.play({kind:m.kind,to:m.to,fromSeat:this.seatOf(m.id),name:m.name});},
+  bubble(p,text){
+    const c=corners[p];if(!c)return;const b=document.createElement('div');b.className='bubble';b.textContent=text.length>60?text.slice(0,58)+'…':text;
+    b.style.left=c.style.left;b.style.top=c.style.top;board.appendChild(b);setTimeout(()=>b.remove(),4100);
+  },
+  // a projectile flies from the thrower's name to the target's name; the target gets the full-screen splash
+  play({kind,to,fromSeat,name}){
+    const tgt=corners[to].querySelector('.nmt').getBoundingClientRect();
+    let sx,sy;if(fromSeat!=null){const r=corners[fromSeat].querySelector('.nmt').getBoundingClientRect();sx=r.left+r.width/2;sy=r.top+r.height/2;}
+    else{sx=innerWidth/2;sy=innerHeight-40;}
+    const tx=tgt.left+tgt.width/2,ty=tgt.top+tgt.height/2;
+    this.sys(`${name||'Кто-то'} бросает ${FX_NAMES[kind]} в ${pname(to)}`);
+    Snd.play('toss');
+    const m=document.createElement('div');m.className='missile';m.innerHTML=document.querySelector(`.throw[data-kind="${kind}"]`).innerHTML.replace(/id="i-/g,'id="m-').replace(/url\(#i-/g,'url(#m-');document.body.appendChild(m);
+    const dist=Math.hypot(tx-sx,ty-sy),lift=Math.min(220,dist*.45),dur=650+dist*.6,spin=kind==='grenade'?720:360;
+    const kf=[];for(let i=0;i<=20;i++){const t=i/20,x=sx+(tx-sx)*t,y=sy+(ty-sy)*t-lift*4*t*(1-t);kf.push({transform:`translate(${x-21}px,${y-21}px) rotate(${spin*t}deg) scale(${1+.4*Math.sin(Math.PI*t)})`,offset:t});}
+    const a=m.animate?m.animate(kf,{duration:dur,easing:'linear',fill:'forwards'}):null;
+    const land=()=>{m.remove();this.hit(kind,tx,ty);if(this.isMe(to))this.splash(kind);};
+    if(a)a.onfinish=land;else setTimeout(land,dur);
+  },
+  isMe(p){return S.seats[p]==='human'&&(!NET.on||S.owners[p]===NET.id)&&(NET.on||p===this.mySeat());},
+  hit(kind,x,y){
+    Snd.play(kind==='grenade'?'boom':kind==='snow'?'snow':kind==='egg'?'crack':'splat');
+    const col={snow:'#ffffff',tomato:'#e2321f',egg:'#ffd23a',grenade:'#ff8a1e'}[kind];
+    const h=document.createElement('div');h.className='hitmark';h.style.left=x+'px';h.style.top=y+'px';
+    h.innerHTML=`<svg viewBox="0 0 70 70"><g fill="${col}" opacity=".9">${[...Array(9)].map((_,i)=>{const a=i/9*6.283,r=12+Math.random()*16;return `<circle cx="${35+Math.cos(a)*r}" cy="${35+Math.sin(a)*r}" r="${3+Math.random()*5}"/>`;}).join('')}<circle cx="35" cy="35" r="12"/></g></svg>`;
+    document.body.appendChild(h);setTimeout(()=>h.remove(),1500);
+    if(kind==='grenade'){document.body.classList.add('shaking');setTimeout(()=>document.body.classList.remove('shaking'),520);}
+  },
+  splash(kind){
+    const el=$('splash');el.innerHTML='';const add=(cls,html='',css={})=>{const e=document.createElement('div');e.className=cls;e.innerHTML=html;Object.assign(e.style,css);el.appendChild(e);return e;};
+    const W=innerWidth,H=innerHeight;
+    if(kind==='snow'){add('frost');for(let i=0;i<70;i++){const s=4+Math.random()*9;add('flake','',{left:Math.random()*W+'px','--s':s+'px','--d':(1.6+Math.random()*1.8)+'s','--x':(Math.random()*80-40)+'px',animationDelay:(Math.random()*.8)+'s'});}}
+    else if(kind==='tomato'||kind==='egg'){
+      const blob=(x,y,r,c1,c2,yolk)=>add('blob',`<svg viewBox="-60 -60 120 120" width="${r*2}" height="${r*2}"><path d="${(()=>{let d='';for(let i=0;i<=14;i++){const a=i/14*6.283,rr=38+Math.random()*16;d+=(i?'L':'M')+(Math.cos(a)*rr).toFixed(1)+' '+(Math.sin(a)*rr).toFixed(1);}return d+'Z';})()}" fill="${c1}"/>${[...Array(6)].map(()=>{const a=Math.random()*6.283,rr=48+Math.random()*10;return `<circle cx="${Math.cos(a)*rr}" cy="${Math.sin(a)*rr}" r="${3+Math.random()*6}" fill="${c1}"/>`;}).join('')}<rect x="${-6+Math.random()*12}" y="20" width="7" height="${30+Math.random()*30}" rx="3.5" fill="${c1}"/>${yolk?`<circle cx="4" cy="-4" r="17" fill="${c2}"/><circle cx="-1" cy="-9" r="5" fill="#fff6c8" opacity=".8"/>`:`<ellipse cx="-12" cy="-12" rx="12" ry="7" fill="${c2}" opacity=".5"/>`}</svg>`,{left:(x-r)+'px',top:(y-r)+'px'});
+      const t=kind==='tomato'?['#d72a18','#ff8f73']:['rgba(255,252,240,.92)','#ffc21a'];
+      blob(W*.5,H*.42,Math.min(W,H)*.34,t[0],t[1],kind==='egg');
+      for(let i=0;i<3;i++)blob(W*(.15+Math.random()*.7),H*(.15+Math.random()*.7),Math.min(W,H)*(.08+Math.random()*.06),t[0],t[1],false);
+    }else if(kind==='grenade'){add('boom');add('soot');add('bang','БАХ!');}
+    clearTimeout(this._t);this._t=setTimeout(()=>{el.innerHTML='';},3600);
+  }
+};
+Chat.init();
 
 function start(data){
   if(data&&data.S&&data.S.pieces&&data.S.pieces[0].length===NP&&data.S.box&&data.S.owners&&data.S.phase!=='lobby'){S=data.S;if(S.phase==='rolling'){S.phase='roll';S.dice=[];}}
