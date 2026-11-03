@@ -41,13 +41,13 @@ header p{margin:0;color:var(--muted);max-width:56ch}
 @media (pointer:coarse){.cup-t small{display:none}.tok{touch-action:manipulation}.board{touch-action:manipulation}}
 
 /* Cloth: the whole embroidered textile is one SVG drawn under a transparent click grid */
-.cloth{position:relative;width:82.86%;aspect-ratio:1;padding:5.715%; /* = 12/174 of the cloth's own width (padding % is of the column) */margin:8.6% 8.57%;filter:drop-shadow(0 12px 18px rgba(0,0,0,.55))}
+.cloth{transform:rotate(var(--view,0deg));transition:transform .8s cubic-bezier(.4,.1,.2,1);position:relative;width:82.86%;aspect-ratio:1;padding:5.715%; /* = 12/174 of the cloth's own width (padding % is of the column) */margin:8.6% 8.57%;filter:drop-shadow(0 12px 18px rgba(0,0,0,.55))}
 .art{position:absolute;left:-10.345%;width:120.690%;top:-10.345%;height:120.690%;pointer-events:none;overflow:visible}
 .board{position:relative;width:100%;aspect-ratio:1;display:grid;grid-template-columns:repeat(19,1fr);grid-template-rows:repeat(19,1fr);user-select:none;-webkit-user-select:none}
 .cell,.box{position:relative;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;align-content:center;gap:1px}
 .box.multi .tok,.cell.multi .tok{width:45%}
 .cell.opt,.box.opt{background:radial-gradient(circle,rgba(255,215,122,.6) 0 26%,rgba(255,200,90,.22) 45%,transparent 66%);z-index:4;cursor:pointer}
-.optnum{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:600 clamp(10px,2.2vw,15px)/1 var(--body);color:#1e1405;background:#ffd77a;border-radius:9px;padding:2px 5px;z-index:6;white-space:nowrap;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.6)}
+.optnum{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(var(--unrot,0deg));font:600 clamp(10px,2.2vw,15px)/1 var(--body);color:#1e1405;background:#ffd77a;border-radius:9px;padding:2px 5px;z-index:6;white-space:nowrap;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.6)}
 .tok.picked{animation:none;filter:brightness(1.2) drop-shadow(0 0 3px #ffd77a) drop-shadow(0 0 6px rgba(255,215,122,.9))}
 .cell.target,.box.target{background:radial-gradient(circle,rgba(255,255,255,.4) 0 24%,transparent 62%);z-index:3}
 .center{position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);place-items:center;pointer-events:none;z-index:2}
@@ -57,16 +57,16 @@ header p{margin:0;color:var(--muted);max-width:56ch}
 .center .h{font-family:var(--display);font-size:clamp(10px,2.2vw,15px);display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1;z-index:1;color:#f6e7c3;text-shadow:0 1px 2px #000}
 .center .h i{display:inline-block;width:.8em;height:.8em;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
 
-.corner{position:absolute;transform:translate(-50%,-50%);max-width:none;
+.corner{position:absolute;transform-origin:0 0;transform:rotate(var(--unrot,0deg)) translate(-50%,-50%);max-width:none;
 display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;white-space:nowrap;pointer-events:none;z-index:4;
   font-family:"Kurale","Forum",Georgia,serif;color:var(--label,#f6e7c3);text-shadow:0 1px 2px var(--label-sh,#000),0 0 6px var(--label-sh,#000);transition:color .25s}
 .corner .nm{font-size:clamp(14px,2.3vw,21px);line-height:1.15;display:flex;align-items:center;gap:5px;text-shadow:none}
 .corner .nm .dot{width:.42em;height:.42em;margin:0;box-shadow:0 0 0 1.5px var(--st1,#f3c55c),0 1px 2px rgba(0,0,0,.6)}
 /* the name looks embroidered: satin-stitch stripes in the cloth's own thread, slightly raised */
-.corner[data-side="l"]{transform:translate(-100%,-50%)}
-.corner[data-side="r"]{transform:translate(0,-50%)}
-.corner[data-side="tl"]{transform:translate(0,-100%)}
-.corner[data-side="br"]{transform:translate(-100%,0)}
+.corner[data-side="l"]{transform:rotate(var(--unrot,0deg)) translate(-100%,-50%)}
+.corner[data-side="r"]{transform:rotate(var(--unrot,0deg)) translate(0,-50%)}
+.corner[data-side="tl"]{transform:rotate(var(--unrot,0deg)) translate(0,-100%)}
+.corner[data-side="br"]{transform:rotate(var(--unrot,0deg)) translate(-100%,0)}
 [hidden]{display:none!important}
 .corner .nmt{font-family:"Lobster","Kurale",cursive;font-weight:400;letter-spacing:.01em;padding:0 3px 2px;
   background:repeating-linear-gradient(62deg,var(--st0,#d99a26) 0 1.2px,var(--st1,#f3c55c) 1.2px 2.4px);-webkit-background-clip:text;background-clip:text;color:transparent;
@@ -92,7 +92,7 @@ display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
 .tok.can:hover{filter:brightness(1.25) drop-shadow(0 0 5px rgba(255,215,122,.95))}
 .tok.can:focus-visible{outline:2px solid #ffd77a;outline-offset:2px}
 @keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3) drop-shadow(0 0 5px rgba(255,215,122,.95))}}
-.badge{position:absolute;right:-3px;top:-5px;font-size:9px;background:var(--gold);color:#1a1206;border-radius:7px;padding:0 3px;line-height:12px;z-index:5;font-weight:600}
+.badge{position:absolute;right:-3px;top:-5px;rotate:var(--unrot,0deg);font-size:9px;background:var(--gold);color:#1a1206;border-radius:7px;padding:0 3px;line-height:12px;z-index:5;font-weight:600}
 
 /* Panel */
 .panel{display:flex;flex-direction:column;gap:16px;min-width:0}
@@ -309,10 +309,34 @@ select{font:inherit;background:var(--table-2);color:var(--ink);border:1px solid 
   .panel{display:flex;flex-direction:column}
   .dock{order:-1}
 }
+
+html,body{overflow-x:hidden}
+/* phones: the board as big as the screen allows; the whole screen becomes the cloth with fringe along its edges */
+.edge{display:none}
+@media (max-width:640px){
+  html,body{background:radial-gradient(120% 90% at 50% 35%,var(--vel0,#26306a),var(--vel1,#1b2353) 60%,var(--vel2,#121839))!important}
+  body{padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(18px, env(safe-area-inset-right, 0px));padding-top:16px}
+  header{gap:8px}header p{display:none}h1{font-size:30px}
+  .cloth{width:112%;margin:0 -6%;filter:none}
+  .art .fringe{display:none}
+  .art .fringe{display:none}
+  .edge{display:block;position:fixed;z-index:40;pointer-events:none}
+  .edge.t,.edge.b{left:0;right:0;height:17px;background:
+    linear-gradient(var(--br1,#eab448),var(--br0,#b9811f)) top/100% 3px no-repeat,var(--tas-h) 0 2px/11px 15px repeat-x}
+  .edge.t{top:0;transform:scaleY(-1)}
+  .edge.b{bottom:0}
+  .edge.l,.edge.r{top:0;bottom:0;width:17px;background:
+    linear-gradient(90deg,var(--br1,#eab448),var(--br0,#b9811f)) left/3px 100% no-repeat,var(--tas-v) 2px 0/15px 11px repeat-y}
+  .edge.l{left:0;transform:scaleX(-1)}
+  .edge.r{right:0}
+  .dock{bottom:17px;background:linear-gradient(180deg,transparent,rgba(10,12,30,.82) 30%);border-top:0}
+  details.sec{background:rgba(10,12,30,.55)}
+}
 </style>
 </head>
 <body>
 
+<span class="edge t"></span><span class="edge b"></span><span class="edge l"></span><span class="edge r"></span>
 <div class="wrap">
   <header>
     <h1>Чаупар</h1>
@@ -495,7 +519,15 @@ let theme='sapphire';try{const t=localStorage.getItem('chaupar-theme');if(THEMES
 drawCloth();
 function drawCloth(){
   const T=THEMES[theme];
-  const cl=document.querySelector('.cloth');cl.style.setProperty('--label',T.label);cl.style.setProperty('--st0',T.satin[0]);cl.style.setProperty('--st1',T.satin[1]);cl.style.setProperty('--label-sh',T.labelSh);
+  const cl=document.querySelector('.cloth');cl.style.setProperty('--label',T.label);
+  // tassel tiles (a knot and a few threads) for the fringe along the phone screen's edges
+  {const th=(f,a,b,c,d)=>T.fringe.slice(0,4).map((col,i)=>{const x=3+i*1.6;return `<path d='M${f(x,3)} Q${f(x+(i-1.5)*.6,8)} ${f(x+(i-1.5)*1.4,14.5)}' stroke='${col}' stroke-width='.9' fill='none' stroke-linecap='round'/>`;}).join('');
+   const H=(x,y)=>x+' '+y,V=(x,y)=>y+' '+x;
+   const knot=(p)=>`<circle cx='${p(5.5,3.2).split(' ')[0]}' cy='${p(5.5,3.2).split(' ')[1]}' r='1.9' fill='${T.knot[1]}'/><circle cx='${p(5.1,2.8).split(' ')[0]}' cy='${p(5.1,2.8).split(' ')[1]}' r='.9' fill='${T.knot[0]}'/>`;
+   const tile=(p,w,h)=>'url("data:image/svg+xml,'+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}'>${th(p)}${knot(p)}</svg>`)+'")';
+   document.documentElement.style.setProperty('--tas-h',tile(H,11,15));document.documentElement.style.setProperty('--tas-v',tile(V,15,11));}
+  document.documentElement.style.setProperty('--vel0',T.vel[0]);document.documentElement.style.setProperty('--vel1',T.vel[1]);document.documentElement.style.setProperty('--vel2',T.vel[2]);
+  document.documentElement.style.setProperty('--fr0',T.fringe[0]);document.documentElement.style.setProperty('--fr1',T.fringe[1]);document.documentElement.style.setProperty('--br0',T.braid[0]);document.documentElement.style.setProperty('--br1',T.braid[1]);cl.style.setProperty('--st0',T.satin[0]);cl.style.setProperty('--st1',T.satin[1]);cl.style.setProperty('--label-sh',T.labelSh);
   // seeded random so the fringe looks the same every time
   let seed=7;const rnd=()=>((seed=(seed*16807)%2147483647)/2147483647);
   const O=12,C=10; // cloth margin, cell size (svg units)
@@ -548,12 +580,12 @@ function drawCloth(){
      <radialGradient id="knot" cx="40%" cy="35%"><stop offset="0" stop-color="${T.knot[0]}"/><stop offset="1" stop-color="${T.knot[1]}"/></radialGradient>
     <pattern id="braid" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="3" fill="${T.braid[0]}"/><rect width="1.5" height="3" fill="${T.braid[1]}"/></pattern>
   </defs>
-  <g opacity=".95">${fr}</g><g>${knots}</g>
-  <rect x="-1" y="-1" width="${W+2}" height="4" fill="url(#braid)"/><rect x="-1" y="${W-3}" width="${W+2}" height="4" fill="url(#braid)"/>
+  <g class="fringe" opacity=".95">${fr}</g><g class="fringe">${knots}</g>
+  <g class="fringe"><rect x="-1" y="-1" width="${W+2}" height="4" fill="url(#braid)"/><rect x="-1" y="${W-3}" width="${W+2}" height="4" fill="url(#braid)"/>
   <rect x="-1" y="-1" width="4" height="${W+2}" fill="url(#braid)"/><rect x="${W-3}" y="-1" width="4" height="${W+2}" fill="url(#braid)"/>
   <rect x="2" y="2" width="${W-4}" height="${W-4}" fill="url(#vel)"/>
   <rect x="2" y="2" width="${W-4}" height="${W-4}" fill="#fff" filter="url(#nap)"/>
-  <rect x="3.6" y="3.6" width="${W-7.2}" height="${W-7.2}" fill="none" stroke="url(#satin)" stroke-width="1.6"/>
+  <rect x="3.6" y="3.6" width="${W-7.2}" height="${W-7.2}" fill="none" stroke="url(#satin)" stroke-width="1.6"/></g>
   <g filter="url(#thread)" fill="none" stroke-linecap="round" stroke-linejoin="round">
     <g stroke="${T.med}" stroke-width="1.5" stroke-dasharray="2.2 .55" opacity=".95">${med}</g>
     <g stroke="${T.grid}" stroke-width=".7" stroke-dasharray="1.6 .5" opacity=".9">${grid}</g>
@@ -573,15 +605,32 @@ const GLOW=['#ffffff','#5b8cff','#ff4a3a','#000000'];
 // where each name sits: right next to that player's start cell, on the outside of the arm, clear of the embroidery
 const LABEL_AT=[[L-.15,E+.55],[N-.15,L+3.12],[L+3.15,.45],[.15,L-.12]];
 const corners=[];
+const SIDES=['l','br','r','tl'];
+// The board turns so that the viewer's colour is at the bottom. VIEW = how many quarter turns (clockwise on screen).
+let VIEW=0;
+const s2b=([x,y],v)=>{for(let i=0;i<v;i++)[x,y]=[y,N-x];return [x,y];}; // screen grid point -> board grid point
+const LAB_BOARD=[[0,0],[0,0],[0,0],[0,0]],LAB_CENTER=[[0,0],[0,0],[0,0],[0,0]];
+const LAB_MID=[[L-1.7,E+.55],[N-1.7,L+3.45],[L+4.7,.45],[1.7,L-.45]];
+function placeLabels(){
+  corners.forEach((d,q)=>{const sIdx=(q-VIEW+4)%4,[x,y]=s2b(LABEL_AT[sIdx],VIEW);
+    LAB_BOARD[q]=[x,y];LAB_CENTER[q]=s2b(LAB_MID[sIdx],VIEW);
+    d.dataset.side=SIDES[sIdx];d.style.left=x/N*100+'%';d.style.top=y/N*100+'%';d.style.setProperty('--unrot',(-VIEW*90)+'deg');});
+}
+function viewSeat(){ // whose side faces me
+  if(NET&&NET.on){for(const p of ORDER)if(S.seats[p]==='human'&&S.owners[p]===NET.id)return p;return 0;}
+  return 0;
+}
+function applyView(){
+  const v=viewSeat();if(v===VIEW&&document.querySelector('.cloth').dataset.view==String(v))return;
+  VIEW=v;const cl=document.querySelector('.cloth');cl.dataset.view=v;cl.style.setProperty('--view',(v*90)+'deg');cl.style.setProperty('--unrot',(-v*90)+'deg');placeLabels();
+}
 for(let p=0;p<4;p++){
-  // name sits right beside the player's start cell, on the outer side of the arm
-  const [x,y]=LABEL_AT[p];
   const d=document.createElement('div');d.className='corner';
-  d.dataset.side=['l','br','r','tl'][p];d.style.setProperty('--pc',GLOW[p]);
-  d.style.left=x/N*100+'%';d.style.top=y/N*100+'%';
+  d.style.setProperty('--pc',GLOW[p]);
   d.innerHTML=`<div class="nm"><span class="dot" style="background:${DOTC[p]}"></span><span class="nmt"></span></div>`;
   board.appendChild(d);corners.push(d);
 }
+placeLabels();
 
 // ---- Rules ----
 const active=p=>S.seats[p]!=='off';
@@ -776,7 +825,8 @@ const Music=(()=>{
 
 // Animate the stone hopping cell by cell, then apply the move
 let animating=false;
-const centerOf=el=>{const b=board.getBoundingClientRect(),r=el.getBoundingClientRect();return [r.left-b.left+r.width/2,r.top-b.top+r.height/2];};
+const centerOf=el=>{const b=board.getBoundingClientRect(),r=el.getBoundingClientRect();let x=r.left-b.left+r.width/2,y=r.top-b.top+r.height/2;const w=b.width;
+  for(let i=0;i<VIEW;i++)[x,y]=[y,w-x];return [x,y];};
 function doMove(m){
   if(animating)return;
   const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1108,9 +1158,9 @@ function freeSpots(){
   // pick two resting places on empty cloth: away from the cross, the boxes, the stone piles and the labels
   const bad=[];BOXES.forEach(({rc:[r,c]})=>bad.push([c+.5,r+.5,1.35]));
   HEAP.forEach(h=>h.forEach(([r,c])=>bad.push([c+.5,r+.5,1.15])));
-  const labs=[[L-1.7,E+.55],[N-1.7,L+3.45],[L+4.7,.45],[1.7,L-.45]];
+  const labs=LAB_CENTER;
   const ok=(x,y,others)=>{
-    if(x<1||y<1||x>N-1||y>N-1)return false;
+    if(x<1.6||y<1.6||x>N-1.6||y>N-1.6)return false;
     if((x>L-.85&&x<L+3.85)||(y>L-.85&&y<L+3.85))return false;
     if(bad.some(([bx,by,d])=>Math.hypot(x-bx,y-by)<d))return false;
     if(labs.some(([lx,ly])=>Math.abs(x-lx)<2.5&&Math.abs(y-ly)<1.05))return false;
@@ -1180,6 +1230,7 @@ function renderDice(){
   }
 }
 function render(){
+  applyView();
   cells.forEach(c=>{c.innerHTML='';c.classList.remove('multi','lastmove');});
   boxEls.forEach(b=>{b.innerHTML='';b.classList.remove('multi');});
   const human=S.phase==='move'&&canAct();
